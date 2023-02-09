@@ -24,6 +24,42 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 // This library is only needed if you want to use hot loading during development.
 import { hot } from "react-hot-loader/root";
 
+class UDCreateNodeAction {
+	constructor(data, objectModel) {
+		this.data = data;
+		this.objectModel = objectModel;
+		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.newNode = this.apiPipeline.createNode(data);
+	}
+
+	// Return augmented command object which will be passed to the
+	// client app.
+	getData() {
+		this.data.newNode = this.newNode;
+		this.data.subPipelines = this.subPipelines;
+		return this.data;
+	}
+
+	// Standard methods
+	do() {
+		this.apiPipeline.addNode(this.newNode);
+		console.log("create a node:");
+		console.log(this.newNode);
+		// Call backend to add the node
+	}
+
+	undo() {
+		this.apiPipeline.deleteNodes([this.newNode]);
+		console.log("delete a node:");
+		console.log(this.newNode);
+		// Call backend to delete the node
+	}
+
+	redo() {
+		this.do();
+	}
+}
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -33,6 +69,8 @@ class App extends React.Component {
 		this.canvasController = new CanvasController();
 		this.canvasController.setPipelineFlow(AllTypesCanvas);
 		this.canvasController.setPipelineFlowPalette(ModelerPalette);
+
+		this.beforeEditActionHandler = this.beforeEditActionHandler.bind(this);
 	}
 
 	contextMenuHandler(data, defaultMenu) {
@@ -51,7 +89,25 @@ class App extends React.Component {
 		console.log("beforeEditActionHandler");
 		console.log(data);
 		console.log(cmd);
-		return data;
+		switch (data.editType) {
+			case "createNode": {
+				const command = new UDCreateNodeAction(data, this.canvasController.getObjectModel());
+				this.canvasController.getCommandStack().do(command);
+				console.log("beforeEditActionHandler: create a node");
+				break;
+			}
+			case "undo": {
+				this.canvasController.getCommandStack().undo();
+				break;
+			}
+			case "redo": {
+				this.canvasController.getCommandStack().redo();
+				break;
+			}
+			default:
+				break;
+		}
+
 	}
 
 	clickActionHandler(data) {
