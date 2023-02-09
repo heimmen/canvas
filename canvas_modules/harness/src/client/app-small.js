@@ -37,35 +37,50 @@ class App extends React.Component {
 
 	contextMenuHandler(data, defaultMenu) {
 		console.log("contextMenuHandler");
+		console.log(data);
 		return defaultMenu;
 	}
 
-	editActionHandler(data) {
+	editActionHandler(data, cmd) {
 		console.log("editActionHandler");
+		console.log(data);
+		console.log(cmd);
+	}
+
+	beforeEditActionHandler(data, cmd) {
+		console.log("beforeEditActionHandler");
+		console.log(data);
+		console.log(cmd);
+		return data;
 	}
 
 	clickActionHandler(data) {
 		console.log("clickActionHandler");
+		console.log(data);
 	}
 
 	decorationActionHandler(node, id, pipelineId) {
-		console.log("decorationActionHandler");
+		console.log(`decorationActionHandler node: ${node}, id: ${id}, pipelineId: ${pipelineId}`);
 	}
 
 	selectionChangeHandler(data) {
 		console.log("selectionChangeHandler");
+		console.log(data);
 	}
 
 	layoutHandler(data) {
 		console.log("layoutHandler");
+		console.log(data);
 	}
 
 	tipHandler(tipType, data) {
 		console.log("tipHandler");
+		// console.log(data);
 	}
 
 	idGenerationHandler(action, data) {
 		console.log("idGenerationHandler");
+		console.log(data);
 	}
 
 	render() {
@@ -175,7 +190,7 @@ class App extends React.Component {
 					notificationConfig={notificationConfig}
 					contextMenuConfig={contextMenuConfig}
 					keyboardConfig={keyboardConfig}
-
+					beforeEditActionHandler={this.beforeEditActionHandler}
 					contextMenuHandler={this.contextMenuHandler}
 					editActionHandler= {this.editActionHandler}
 					clickActionHandler= {this.clickActionHandler}
