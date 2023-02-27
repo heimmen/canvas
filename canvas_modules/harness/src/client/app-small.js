@@ -105,9 +105,8 @@ class App extends React.Component {
 				break;
 			}
 			default:
-				break;
+				return data;
 		}
-
 	}
 
 	clickActionHandler(data) {
@@ -130,7 +129,7 @@ class App extends React.Component {
 	}
 
 	tipHandler(tipType, data) {
-		console.log("tipHandler");
+		// console.log("tipHandler");
 		// console.log(data);
 	}
 
